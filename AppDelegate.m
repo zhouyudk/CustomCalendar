@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "AFHTTPRequestOperationManager.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,32 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    NSURL *baseURL                         = [NSURL URLWithString:@"http://baidu.com/"];
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseURL];
+    NSOperationQueue *operationQueue       = manager.operationQueue;
+    [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                [operationQueue setSuspended:NO];
+                
+                // 此处可以发送有网络通知
+                //NSLog(@"有网络");
+                
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+            default:
+                [operationQueue setSuspended:YES];
+                
+                // 此处可以发送断网通知
+                //NSLog(@"断网了");
+                
+                break;
+        }
+    }];
+    
+    // 开始监测网络
+    [manager.reachabilityManager startMonitoring];
     return YES;
 }
 

@@ -8,8 +8,10 @@
             <connections>
                 <outlet property="collectionView" destination="SMT-HN-Idt" id="nWl-gc-TIW"/>
                 <outlet property="detailChiDay" destination="wKw-Gf-7FY" id="c1n-jA-eO8"/>
+                <outlet property="detailJi" destination="xdo-4D-c0f" id="SYU-wb-xKH"/>
                 <outlet property="detailView" destination="xhb-ay-uMq" id="EkF-Um-Lt6"/>
                 <outlet property="detailWorldDay" destination="b0N-MA-cwy" id="3VY-4V-UYM"/>
+                <outlet property="detailYi" destination="XLV-p7-FAD" id="T3A-iq-dUf"/>
                 <outlet property="subView" destination="8sd-UP-qlu" id="vUJ-Pv-ndT"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="weekView" destination="HCD-4J-wV0" id="5bq-FW-ImA"/>
@@ -65,7 +67,7 @@
                         </collectionView>
                         <view contentMode="scaleToFill" id="xhb-ay-uMq">
                             <rect key="frame" x="0.0" y="355" width="320" height="90"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="qLv-ih-w0w">
                                     <rect key="frame" x="8" y="8" width="70" height="70"/>

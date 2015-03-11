@@ -11,6 +11,9 @@
 #import "calendarViewController.h"
 #import "calendarCell.h"
 #import "calendarDayModel.h"
+#import "AFHTTPRequestOperationManager.h"
+
+
 
 @interface calendarViewController ()
 {
@@ -21,6 +24,7 @@
 
     NSInteger selectCellTag;
     NSInteger collectionViewLines;
+    
 }
 
 @end
@@ -68,6 +72,15 @@ static NSString * const reuseIdentifier = @"cell";
     
     todayModel = dayArr[todayModel.worldDay-1];
     selectCellTag = weekdayOfFirstDay+todayModel.worldDay-1;
+    [self getCurrentDayCalendarWithDate:dateStr success:^(id data) {
+//        NSLog(@"%@",data);
+//        NSLog(@"%@",[data objectForKey:@"yi"]);
+
+        _detailJi.text = [data objectForKey:@"yi"];
+        _detailYi.text =  [data objectForKey:@"ji"];
+    } fail:^{
+        nil;
+    }];
     
     [_collectionView registerNib:[UINib nibWithNibName:@"calendarCell" bundle:nil] forCellWithReuseIdentifier:reuseIdentifier];
     _collectionView.scrollEnabled = NO;
@@ -87,6 +100,7 @@ static NSString * const reuseIdentifier = @"cell";
     
     _detailChiDay.text = [NSString stringWithFormat:@"%@%@",todayModel.chiMonthStr,todayModel.chiDayStr];
     _detailWorldDay.text = [NSString stringWithFormat:@"%ld",todayModel.worldDay];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -308,6 +322,17 @@ static NSString * const reuseIdentifier = @"cell";
     {
         selectCellTag = indexPath.row;
         calendarDayModel *dayModel = dayArr[row-weekdayOfFirstDay];
+        
+        [self getCurrentDayCalendarWithDate:[NSString stringWithFormat:@"%ld-%ld-%ld",(long)dayModel.worldYear,(long)dayModel.worldMonth,(long)dayModel.worldDay] success:^(id data) {
+//            NSLog(@"%@",data);
+//            NSLog(@"%@",[data objectForKey:@"yi"]);
+            
+            
+            _detailJi.text = [data objectForKey:@"yi"];
+            _detailYi.text =  [data objectForKey:@"ji"];
+        } fail:^{
+            nil;
+        }];
         _detailChiDay.text = [NSString stringWithFormat:@"%@%@",dayModel.chiMonthStr,dayModel.chiDayStr];
         _detailWorldDay.text = [NSString stringWithFormat:@"%ld",dayModel.worldDay];
     }
@@ -322,6 +347,26 @@ static NSString * const reuseIdentifier = @"cell";
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
+}
+
+- (void)getCurrentDayCalendarWithDate:(NSString*)currentDate success:(void (^)(id data))success fail:(void (^)())fail
+{
+    //NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSString * url = [NSString stringWithFormat:@"http://v.juhe.cn/laohuangli/d?date=%@&key=4ac63672062d8f8a88cfd857dadf9046",currentDate];
+    NSDictionary *dict = @{@"format": @"json"};
+    // 网络访问是异步的,回调是主线程的,因此程序员不用管在主线程更新UI的事情
+    [manager GET:url parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (success) {
+            NSDictionary *resultDic = [responseObject objectForKey:@"result"];
+            success(resultDic);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        if (fail) {
+            fail();
+        }
+    }];
 }
 
 @end

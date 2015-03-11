@@ -18,5 +18,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *detailChiDay;
 @property (weak, nonatomic) IBOutlet UILabel *detailWorldDay;
+@property (weak, nonatomic) IBOutlet UILabel *detailJi;
+@property (weak, nonatomic) IBOutlet UILabel *detailYi;
 
 @end
